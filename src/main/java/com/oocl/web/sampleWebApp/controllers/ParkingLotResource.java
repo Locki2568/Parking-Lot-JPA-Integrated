@@ -2,38 +2,37 @@ package com.oocl.web.sampleWebApp.controllers;
 
 import com.oocl.web.sampleWebApp.domain.ParkingBoy;
 import com.oocl.web.sampleWebApp.domain.ParkingBoyRepository;
+import com.oocl.web.sampleWebApp.domain.ParkingLot;
+import com.oocl.web.sampleWebApp.domain.ParkingLotRepository;
 import com.oocl.web.sampleWebApp.models.ParkingBoyResponse;
+import com.oocl.web.sampleWebApp.models.ParkingLotResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.net.URI;
-
 @RestController
-@RequestMapping("/parkingboys")
-public class ParkingBoyResource {
+@RequestMapping("/parkinglots")
+public class ParkingLotResource {
 
     @Autowired
-    private ParkingBoyRepository parkingBoyRepository;
+    private ParkingLotRepository parkingLotRepository;
     //@Autowired
     //private EntityManager entityManager;
 
     @GetMapping
-    public ResponseEntity<ParkingBoyResponse[]> getAll() {
-        final ParkingBoyResponse[] parkingBoys = parkingBoyRepository.findAll().stream()
-                .map(ParkingBoyResponse::create)
-                .toArray(ParkingBoyResponse[]::new);
-        return ResponseEntity.ok(parkingBoys);
+    public ResponseEntity<ParkingLotResponse[]> getAll() {
+        final ParkingLotResponse[] parkingLots = parkingLotRepository.findAll().stream()
+                .map(ParkingLotResponse::create)
+                .toArray(ParkingLotResponse[]::new);
+        return ResponseEntity.ok(parkingLots);
     }
 
-    //@Transactional
-    @PostMapping(produces = {"application/json"},consumes = {"application/json"})
-    public ResponseEntity<ParkingBoyResponse> appendParkingboy(@RequestBody ParkingBoy parkingBoy) {
-        parkingBoyRepository.save(parkingBoy);
-        parkingBoyRepository.flush();
-        return new ResponseEntity(HttpStatus.CREATED);
-    }
+//    //@Transactional
+//    @PostMapping(produces = {"application/json"},consumes = {"application/json"})
+//    public ResponseEntity<ParkingBoyResponse> appendParkingboy(@RequestBody ParkingBoy parkingBoy) {
+//        parkingBoyRepository.save(parkingBoy);
+//        parkingBoyRepository.flush();
+//        return new ResponseEntity(HttpStatus.CREATED);
+//    }
 }

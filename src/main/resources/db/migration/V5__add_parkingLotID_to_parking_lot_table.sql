@@ -1,7 +1,1 @@
-alter table parking_lot drop primary key;
-
-alter table parking_boy drop primary key;
-
-alter table parking_lot alter column id bigint not null identity;
-
-alter table parking_boy alter column id bigint not null identity;
+alter table if exists parking_lot add column if not exists parking_lot_id varchar(12) not null
