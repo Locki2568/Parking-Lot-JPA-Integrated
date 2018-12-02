@@ -1,0 +1,1 @@
+alter table if exists parking_lot add column if not exists capacity int default 0 not null
