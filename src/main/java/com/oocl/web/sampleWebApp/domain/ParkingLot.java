@@ -22,6 +22,8 @@ public class ParkingLot {
     @Column(name = "capacity",  nullable = false)
     private int capacity;
 
+    protected ParkingLot() {}
+
     public ParkingLot(String parkingLotID, int capacity){
         this.parkingLotID = parkingLotID;
         this.capacity = capacity;

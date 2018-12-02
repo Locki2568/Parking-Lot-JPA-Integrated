@@ -2,7 +2,10 @@ package com.oocl.web.sampleWebApp;
 
 import com.oocl.web.sampleWebApp.domain.ParkingBoy;
 import com.oocl.web.sampleWebApp.domain.ParkingBoyRepository;
+import com.oocl.web.sampleWebApp.domain.ParkingLot;
+import com.oocl.web.sampleWebApp.domain.ParkingLotRepository;
 import com.oocl.web.sampleWebApp.models.ParkingBoyResponse;
+import com.oocl.web.sampleWebApp.models.ParkingLotResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ import static org.junit.Assert.assertEquals;
 public class SampleWebAppApplicationTests {
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
+
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     //@Autowired
     //private EntityManager entityManager;
@@ -99,5 +105,25 @@ public class SampleWebAppApplicationTests {
             parkingBoyRepository.save(parkingBoy);
             parkingBoyRepository.flush();
         });
+    }
+
+    @Test
+    public void should_get_parking_lots() throws Exception {
+        // Given
+        final ParkingLot parkinglot = parkingLotRepository.save(new ParkingLot("TestParkID", 10));
+
+        // When
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .get("/parkinglots"))
+                .andReturn();
+
+        // Then
+        assertEquals(200, result.getResponse().getStatus());
+
+        final ParkingLotResponse[] parkingLots = getContentAsObject(result, ParkingLotResponse[].class);
+
+        assertEquals(1, parkingLots.length);
+        assertEquals("TestParkID", parkingLots[0].getParkingLotID());
+        assertEquals(10, parkingLots[0].getCapacity());
     }
 }
