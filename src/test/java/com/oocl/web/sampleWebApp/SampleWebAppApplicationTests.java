@@ -126,4 +126,33 @@ public class SampleWebAppApplicationTests {
         assertEquals("TestParkID", parkingLots[0].getParkingLotID());
         assertEquals(10, parkingLots[0].getCapacity());
     }
+
+    @Test
+    public void should_post_append_parking_lot_to_DB() throws Exception {
+        // Given
+        String json = "{\"parkingLotID\" : \"TestPark123\", \"capacity\" : 10}";
+
+        // When
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .post("/parkinglots")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andReturn();
+
+        // Then
+        assertEquals(201, result.getResponse().getStatus());
+
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+
+        // Should not use getOne() because it only get a proxy object from cache
+        // Should use findOne() instead
+
+        Optional<ParkingLot> actualParkingLot = parkingLotRepository.findById(1L);
+
+        final ParkingLotResponse parkingLot = ParkingLotResponse.create(actualParkingLot.get());
+
+        assertEquals(1, parkingLots.size());
+        assertEquals("TestPark123", parkingLot.getParkingLotID());
+        assertEquals(10, parkingLot.getCapacity());
+    }
 }

@@ -28,11 +28,10 @@ public class ParkingLotResource {
         return ResponseEntity.ok(parkingLots);
     }
 
-//    //@Transactional
-//    @PostMapping(produces = {"application/json"},consumes = {"application/json"})
-//    public ResponseEntity<ParkingBoyResponse> appendParkingboy(@RequestBody ParkingBoy parkingBoy) {
-//        parkingBoyRepository.save(parkingBoy);
-//        parkingBoyRepository.flush();
-//        return new ResponseEntity(HttpStatus.CREATED);
-//    }
+    @PostMapping(produces = {"application/json"},consumes = {"application/json"})
+    public ResponseEntity<ParkingLotResponse> appendParkingLot(@RequestBody ParkingLot parkingLot) {
+        parkingLotRepository.save(parkingLot);
+        parkingLotRepository.flush();
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
 }

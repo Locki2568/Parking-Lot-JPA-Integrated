@@ -29,7 +29,6 @@ public class ParkingBoyResource {
         return ResponseEntity.ok(parkingBoys);
     }
 
-    //@Transactional
     @PostMapping(produces = {"application/json"},consumes = {"application/json"})
     public ResponseEntity<ParkingBoyResponse> appendParkingboy(@RequestBody ParkingBoy parkingBoy) {
         parkingBoyRepository.save(parkingBoy);
