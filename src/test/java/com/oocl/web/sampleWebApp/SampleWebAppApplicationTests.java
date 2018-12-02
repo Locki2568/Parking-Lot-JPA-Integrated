@@ -168,4 +168,25 @@ public class SampleWebAppApplicationTests {
             parkingLotRepository.flush();
         });
     }
+
+    @Test
+    public void should_throws_exception_when_capacity_is_out_of_range(){
+        //Given A parking boy with employeeID too long
+        final String parkingLotID = "TestPark456";
+        final int capacityThatIsTooLow = 0;
+
+        ParkingLot parkingLotWithLowCapacity = new ParkingLot(parkingLotID, capacityThatIsTooLow);
+        //When save into repository should throw exception
+        AssertHelper.assertThrows(Exception.class, () ->{
+            parkingLotRepository.save(parkingLotWithLowCapacity);
+            parkingLotRepository.flush();
+        });
+
+        final int capacityThatIsTooHigh = 101;
+        ParkingLot parkingLotWithHighCapacity = new ParkingLot(parkingLotID, capacityThatIsTooHigh);
+        AssertHelper.assertThrows(Exception.class, () ->{
+            parkingLotRepository.save(parkingLotWithHighCapacity);
+            parkingLotRepository.flush();
+        });
+    }
 }
