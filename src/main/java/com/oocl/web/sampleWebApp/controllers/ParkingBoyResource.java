@@ -10,12 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/parkingboys")
 public class ParkingBoyResource {
@@ -38,8 +32,11 @@ public class ParkingBoyResource {
     public ResponseEntity<ParkingBoyResponse> getByEmployeeID(@PathVariable String id) {
         final String employeeID = id;
         final ParkingBoy parkingBoyWithID = parkingBoyRepository.findByEmployeeId(employeeID);
-        final ParkingBoyResponse parkingBoy = ParkingBoyResponse.create(parkingBoyWithID);
-        return ResponseEntity.ok(parkingBoy);
+        if(parkingBoyWithID != null) {
+            final ParkingBoyResponse parkingBoy = ParkingBoyResponse.create(parkingBoyWithID);
+            return ResponseEntity.ok(parkingBoy);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping(produces = {"application/json"},consumes = {"application/json"})

@@ -257,4 +257,27 @@ public class SampleWebAppApplicationTests {
         assertEquals("boy", parkingBoy.getEmployeeId());
         assertEquals("lot", parkingBoy.getParkingLots().get(0).getParkingLotID());
     }
+
+    @Test
+    public void should_throws_exception_when_get_parking_boys_with_wrong_id() throws Exception {
+        // Given
+        final ParkingBoy boy = parkingBoyRepository.save(new ParkingBoy("boy"));
+        parkingBoyRepository.flush();
+        final ParkingLot lot = parkingLotRepository.save(new ParkingLot("lot",3));
+        parkingLotRepository.flush();
+        String json = "{\"parkingLotID\" : \"lot\", \"capacity\" : 3}";
+        final MvcResult resultThatIsNotImportant = mvc.perform(MockMvcRequestBuilders
+                .put("/parkingboys/"+"boy")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andReturn();
+
+        // When
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .get("/parkingboys/wrongboy"))
+                .andReturn();
+
+        // Then
+        assertEquals(404, result.getResponse().getStatus());
+    }
 }
