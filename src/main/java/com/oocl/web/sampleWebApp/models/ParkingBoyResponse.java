@@ -47,7 +47,7 @@ public class ParkingBoyResponse {
     }
 
     public static ParkingBoyResponse create(ParkingBoy entity) {
-        if (entity.getParkingLotList() == null) {
+        if (entity.getParkingLotList().size() == 0) {
             return create(entity.getEmployeeId());
         }
         return create(entity.getEmployeeId(), entity.getParkingLotList());

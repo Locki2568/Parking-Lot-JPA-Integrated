@@ -1,6 +1,7 @@
 package com.oocl.web.sampleWebApp.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class ParkingBoy {
     }
 
     @OneToMany(mappedBy = "parkingBoy", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private List<ParkingLot> parkingLotList;
+    private List<ParkingLot> parkingLotList = new ArrayList<>();
 
     public void addParkingLot(ParkingLot parkingLot){
         this.parkingLotList.add(parkingLot);

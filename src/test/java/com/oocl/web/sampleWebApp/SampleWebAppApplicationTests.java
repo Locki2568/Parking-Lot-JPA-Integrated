@@ -229,4 +229,32 @@ public class SampleWebAppApplicationTests {
         assertEquals("Test123", parkingLot.getParkingBoy().getEmployeeId());
         assertTrue(ifAcutalParkingLotFoundInParkingBoy);
     }
+
+    @Test
+    public void should_get_parking_boys_with_id() throws Exception {
+        // Given
+        final ParkingBoy boy = parkingBoyRepository.save(new ParkingBoy("boy"));
+        parkingBoyRepository.flush();
+        final ParkingLot lot = parkingLotRepository.save(new ParkingLot("lot",3));
+        parkingLotRepository.flush();
+        String json = "{\"parkingLotID\" : \"lot\", \"capacity\" : 3}";
+        final MvcResult resultThatIsNotImportant = mvc.perform(MockMvcRequestBuilders
+                .put("/parkingboys/"+"boy")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andReturn();
+
+        // When
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .get("/parkingboys/boy"))
+                .andReturn();
+
+        // Then
+        assertEquals(200, result.getResponse().getStatus());
+
+        final ParkingBoyResponse parkingBoy = getContentAsObject(result, ParkingBoyResponse.class);
+
+        assertEquals("boy", parkingBoy.getEmployeeId());
+        assertEquals("lot", parkingBoy.getParkingLots().get(0).getParkingLotID());
+    }
 }
