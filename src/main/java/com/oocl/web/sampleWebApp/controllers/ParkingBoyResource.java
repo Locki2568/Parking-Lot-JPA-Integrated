@@ -2,6 +2,8 @@ package com.oocl.web.sampleWebApp.controllers;
 
 import com.oocl.web.sampleWebApp.domain.ParkingBoy;
 import com.oocl.web.sampleWebApp.domain.ParkingBoyRepository;
+import com.oocl.web.sampleWebApp.domain.ParkingLot;
+import com.oocl.web.sampleWebApp.domain.ParkingLotRepository;
 import com.oocl.web.sampleWebApp.models.ParkingBoyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/parkingboys")
@@ -18,8 +21,9 @@ public class ParkingBoyResource {
 
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
-    //@Autowired
-    //private EntityManager entityManager;
+
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     @GetMapping
     public ResponseEntity<ParkingBoyResponse[]> getAll() {
@@ -34,5 +38,16 @@ public class ParkingBoyResource {
         parkingBoyRepository.save(parkingBoy);
         parkingBoyRepository.flush();
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity associateParkingLotToParkingBoy(@RequestBody ParkingLot parkingLot, @PathVariable String id){
+        String employeesID = id;
+        ParkingBoy parkingBoyInDB = parkingBoyRepository.findByEmployeeId(employeesID);
+        ParkingLot parkingLotInDB = parkingLotRepository.findByParkingLotID(parkingLot.getParkingLotID());
+        parkingBoyInDB.addParkingLot(parkingLotInDB);
+        parkingBoyRepository.flush();
+        parkingLotRepository.flush();
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.oocl.web.sampleWebApp.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "parking_boy")
@@ -16,6 +17,19 @@ public class ParkingBoy {
         return id;
     }
 
+    @OneToMany(mappedBy = "parkingBoy", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<ParkingLot> parkingLotList;
+
+    public void addParkingLot(ParkingLot parkingLot){
+        this.parkingLotList.add(parkingLot);
+        parkingLot.setParkingBoy(this);
+    }
+
+    public void removeParkingLot(ParkingLot parkingLot){
+        this.parkingLotList.remove(parkingLot);
+        parkingLot.setParkingBoy(null);
+    }
+
     public String getEmployeeId() {
         return employeeId;
     }
@@ -28,6 +42,10 @@ public class ParkingBoy {
 
     public ParkingBoy(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public List<ParkingLot> getParkingLotList() {
+        return parkingLotList;
     }
 }
 

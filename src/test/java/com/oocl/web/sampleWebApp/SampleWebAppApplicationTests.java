@@ -26,10 +26,12 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.oocl.web.sampleWebApp.WebTestUtil.getContentAsObject;
 import static com.oocl.web.sampleWebApp.WebTestUtil.toObject;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -188,5 +190,43 @@ public class SampleWebAppApplicationTests {
             parkingLotRepository.save(parkingLotWithHighCapacity);
             parkingLotRepository.flush();
         });
+    }
+
+    @Test
+    public void should_put_parking_lot_to_parkingBoy() throws Exception{
+        // Given
+        String employee_id = "Test123";
+        String json = "{\"parkingLotID\" : \"TestPark123\", \"capacity\" : 10}";
+        parkingBoyRepository.save(new ParkingBoy(employee_id));
+        parkingBoyRepository.flush();
+        parkingLotRepository.save(new ParkingLot("TestPark123",10));
+        parkingLotRepository.flush();
+
+        // When
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .put("/parkingboys/"+employee_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andReturn();
+
+        // Then
+        assertEquals(200, result.getResponse().getStatus());
+
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll().stream().filter(parkingLot -> parkingLot.getParkingLotID().equals("TestPark123")).collect(Collectors.toList());
+
+        ParkingLot actualParkingLot = parkingLots.get(0);
+
+        List<ParkingBoy> parkingBoys = parkingBoyRepository.findAll().stream().filter(parkingBoy -> parkingBoy.getEmployeeId().equals("Test123")).collect(Collectors.toList());
+
+        ParkingBoy actualParkingBoy = parkingBoys.get(0);
+
+        final ParkingLotResponse parkingLot = ParkingLotResponse.create(actualParkingLot);
+
+        final ParkingBoyResponse parkingBoy = ParkingBoyResponse.create(actualParkingBoy.getEmployeeId(),actualParkingBoy.getParkingLotList());
+
+        final Boolean ifAcutalParkingLotFoundInParkingBoy = parkingBoy.getParkingLots().stream().allMatch(parkingLot1 -> parkingLot1.getParkingLotID().equals("TestPark123"));
+
+        assertEquals("Test123", parkingLot.getParkingBoy().getEmployeeId());
+        assertTrue(ifAcutalParkingLotFoundInParkingBoy);
     }
 }
