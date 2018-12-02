@@ -62,7 +62,6 @@ public class SampleWebAppApplicationTests {
     }
 
     @Test
-    //@Transactional
     public void should_post_append_parking_boy_to_repo() throws Exception {
         // Given
         String json = "{\"employeeId\" : \"test123\"}";
@@ -88,5 +87,17 @@ public class SampleWebAppApplicationTests {
 
         assertEquals(1, parkingBoys.size());
         assertEquals("test123", parkingBoy.getEmployeeId());
+    }
+
+    @Test
+    public void hould_throws_exception_when_employeeID_lenth_too_long(){
+        //Given A parking boy with employeeID too long
+        final String employeeID = "IdThatISTooLongggggggggggggggggggggggggggggggggg";
+        ParkingBoy parkingBoy = new ParkingBoy(employeeID);
+        //When save into repository should throw exception
+        AssertHelper.assertThrows(Exception.class, () ->{
+            parkingBoyRepository.save(parkingBoy);
+            parkingBoyRepository.flush();
+        });
     }
 }

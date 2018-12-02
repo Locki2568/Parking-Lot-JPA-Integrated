@@ -9,7 +9,7 @@ public class ParkingBoy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "employee_id", length = 64, unique = true, nullable = false)
+    @Column(name = "employee_id", length = 12, unique = true, nullable = false)
     private String employeeId;
 
     public Long getId() {
