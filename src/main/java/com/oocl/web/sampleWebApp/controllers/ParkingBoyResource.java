@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/parkingboys")
@@ -31,6 +32,14 @@ public class ParkingBoyResource {
                 .map(ParkingBoyResponse::create)
                 .toArray(ParkingBoyResponse[]::new);
         return ResponseEntity.ok(parkingBoys);
+    }
+
+    @GetMapping(path = "/{id}", produces = {"application/json"})
+    public ResponseEntity<ParkingBoyResponse> getByEmployeeID(@PathVariable String id) {
+        final String employeeID = id;
+        final ParkingBoy parkingBoyWithID = parkingBoyRepository.findByEmployeeId(employeeID);
+        final ParkingBoyResponse parkingBoy = ParkingBoyResponse.create(parkingBoyWithID);
+        return ResponseEntity.ok(parkingBoy);
     }
 
     @PostMapping(produces = {"application/json"},consumes = {"application/json"})

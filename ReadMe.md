@@ -49,3 +49,20 @@ Then: Should return a list containing all parking lots
  }...
 ]
 ```
+## Story 3
+### AC1
+Given: A parking boy and a parking lot in DB. A employee ID and A parking lot in body
+```json
+{
+  parkingLotID : String,
+  capacity : int
+}
+```
+When: PUT to ``/parkingboys/{employeeID}``
+
+Then: Should return status code 200
+
+### AC2
+Given: A employee ID
+When: GET from ``/parkingboy/{employeeID}``
+Then: Should return status code 200.
