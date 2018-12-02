@@ -155,4 +155,17 @@ public class SampleWebAppApplicationTests {
         assertEquals("TestPark123", parkingLot.getParkingLotID());
         assertEquals(10, parkingLot.getCapacity());
     }
+
+    @Test
+    public void should_throws_exception_when_parkingLotID_is_too_long(){
+        //Given A parking boy with employeeID too long
+        final String parkingLotID = "IdThatISTooLongggggggggggggggggggggggggggggggggg";
+        final int capacity = 10;
+        ParkingLot parkingLot = new ParkingLot(parkingLotID, capacity);
+        //When save into repository should throw exception
+        AssertHelper.assertThrows(Exception.class, () ->{
+            parkingLotRepository.save(parkingLot);
+            parkingLotRepository.flush();
+        });
+    }
 }
